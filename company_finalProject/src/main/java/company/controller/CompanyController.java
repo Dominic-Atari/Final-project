@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import company.controller.model.CompanyData;
+import company.controller.model.CompanyData.EmployeeData;
 import company.service.CompanyService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -79,5 +80,18 @@ public class CompanyController {
 		public void deleteAllCompany() {
 			log.info("Attempting to delete all company");
 			throw new UnsupportedOperationException("Deleting all company is not allowed.");
+		}
+		//-------------------------------------------------------------------------
+		
+		//Employee methods
+		
+		@PostMapping("/company/{companyid}/employee")
+		@ResponseStatus(code = HttpStatus.CREATED)
+		public EmployeeData insertEmployee(@PathVariable Long companyId, 
+				@RequestBody EmployeeData employeeData) {
+			
+			log.info("creating employee {} for company with ID={}", companyId, employeeData);
+			
+			return companyService.saveEmployee(companyId, employeeData);
 		}
 }

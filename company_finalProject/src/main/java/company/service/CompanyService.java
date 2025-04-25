@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -11,8 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import company.controller.model.CompanyData;
+import company.controller.model.CompanyData.EmployeeData;
 import company.dao.CompanyDao;
+import company.dao.DepartmentDao;
+import company.dao.EmployeeDao;
 import company.entity.Company;
+import company.entity.Department;
+import company.entity.Employee;
 
 @Service
 public class CompanyService {
@@ -20,6 +26,12 @@ public class CompanyService {
 
 	@Autowired
 	private CompanyDao companyDao;
+	
+	@Autowired
+	private DepartmentDao departmentDao;
+	
+	@Autowired
+	private EmployeeDao employeeDao;
 
 	//retrieving data
 	@Transactional(readOnly = false)
@@ -98,5 +110,62 @@ public class CompanyService {
 	public void deleteCompanyById(Long companyId) {
 		Company company = findCompanyById(companyId);
 		companyDao.delete(company);
+	}
+	//--------------------------------------------------------------------------------
+	
+	@Transactional(readOnly = false)
+	public EmployeeData saveEmployee(Long companyId, EmployeeData employeeData) {
+		Company company = findCompanyById(companyId);
+		
+		Set<Department> departments = departmentDao.findAllByDepartmentIn(employeeData.getDepartments());
+		
+		Employee employee = findOrCreateEmployee(employeeData.getEmployeeId());
+		
+		setEmployeeFields(employee, employeeData);
+		
+		//set relationships
+		
+		employee.setCompany(company);
+		company.getEmployees().add(employee);
+		
+		for(Department departement : departments) {
+			departement.getEmployees().add(employee);
+			employee.getDepartments().add(departement);
+		}
+		
+		Employee dbEmployee = employeeDao.save(employee);
+		return new EmployeeData(dbEmployee);
+	}
+
+	private void setEmployeeFields(Employee employee, EmployeeData employeeData) {
+		//don't set Id because it is being handled by java.
+		
+		employee.setEmployeeName(employeeData.getEmployeeName());
+		employee.setAge(employeeData.getAge());
+		employee.setGender(employeeData.getGender());
+		employee.setPosition(employeeData.getPosition());
+		employee.setQualification(employeeData.getQualification());
+		employee.setAddress(employeeData.getAddress());
+		
+		
+	}
+
+	private Employee findOrCreateEmployee(Long employeeId) {
+		Employee employee;
+		
+		if(Objects.isNull(employeeId)) {
+			employee = new Employee();
+		}
+		else {
+			employee = findEmployeeById(employeeId);
+		}
+		
+		return employee;
+	}
+
+	private Employee findEmployeeById(Long employeeId) {
+		return employeeDao.findById(employeeId).orElseThrow(() -> new NoSuchElementException(
+				"Employee with ID= " +employeeId+ " does not exist"));
+		
 	}
 }
