@@ -114,9 +114,22 @@ public class CompanyController {
 			return companyService.retrieveCompanyById(companyId, employeeId);
 		}
 		
+//##### RETRIEVE ALL EMPLOYEE
+		
 		@GetMapping("/company/employee")
 		public List<EmployeeData> retrieveAllEmployees() {
 		    log.info("Retrieving all Employees data");
 		    return companyService.retrieveAllEmployees();
 		}
+		
+		//Delete by ID
+		
+			@DeleteMapping("/company/employee/{employeeId}")
+			public Map<String, String> deleteEmployeeById(@PathVariable Long employeeId) {
+				log.info("Deleting employee by ID={}", employeeId);
+
+				companyService.deleteEmployeeById(employeeId);
+
+				return Map.of("message", "Deletion of employee by ID= " + employeeId + "was successfull.");
+			}
 }

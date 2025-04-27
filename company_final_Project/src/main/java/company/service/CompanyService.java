@@ -102,8 +102,9 @@ public class CompanyService {
 
 	// deleting company
 	/*
-	 * @Transactional(readOnly = false) private Company findCompanyById(Long
-	 * companyId) { Company company = findCompanyById(companyId);
+	 * @Transactional(readOnly = false) 
+	 * private Company findCompanyById(Long companyId) { 
+	 * Company company = findCompanyById(companyId);
 	 * companyDao.delete(company);
 	  * }
 	 * 
@@ -170,6 +171,7 @@ public class CompanyService {
 	//########
 			Optional<Company> opEmployee = companyDao.findByCompanyEmail(Email);
 		
+			
 			if(opEmployee.isPresent()) {
 	//#######
 				throw new DataIntegrityViolationException("Employee with email " + Email + "already exist.");
@@ -204,6 +206,7 @@ public class CompanyService {
 		return new EmployeeData(employee);
 	}
 	
+//### RETRIEVE ALL EMPLOYEES
 		//formatter:off
 	@Transactional(readOnly = true)
 	public List<EmployeeData> retrieveAllEmployees() {
@@ -213,4 +216,10 @@ public class CompanyService {
 	            .toList();
 		//@formatter:on
 	}
+	
+	@Transactional(readOnly = false)
+	public void deleteEmployeeById(Long employeeId) {
+	    Employee employee = findEmployeeById(employeeId);
+	    employeeDao.delete(employee);
+		}
 }

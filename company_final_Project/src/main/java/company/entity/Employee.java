@@ -36,7 +36,7 @@ public class Employee {
 	//@Formatter:on
 	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	@ManyToOne(cascade = CascadeType.ALL) //bidirectional
+	@ManyToOne(cascade = CascadeType.PERSIST) //PERSIST helps to only delete employee while living company
 	@JoinColumn(name = "company_id", nullable = false)
 	private Company company;
 	
