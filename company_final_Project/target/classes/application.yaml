@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    username: company
+    password: company
+    url: jdbc:mysql://localhost:3306/company
+
+  jpa:
+    hibernate:
+      ddl-auto: update #update or create#
+    show-sql: true
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+     mode: never #always or never#
