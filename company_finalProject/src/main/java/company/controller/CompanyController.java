@@ -85,12 +85,12 @@ public class CompanyController {
 		
 		//Employee methods
 		
-		@PostMapping("/company/{companyid}/employee")
+		@PostMapping("/company/{companyId}/employee")
 		@ResponseStatus(code = HttpStatus.CREATED)
-		public EmployeeData insertEmployee(@PathVariable Long companyId, 
+		public EmployeeData insertEmployee(@PathVariable Long companyId,
 				@RequestBody EmployeeData employeeData) {
 			
-			log.info("creating employee {} for company with ID={}", companyId, employeeData);
+			log.info("Creating employee {} for company with ID={}", employeeData, companyId);
 			
 			return companyService.saveEmployee(companyId, employeeData);
 		}

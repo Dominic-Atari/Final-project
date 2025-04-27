@@ -37,6 +37,7 @@ public class CompanyService {
 	@Transactional(readOnly = false)
 	public CompanyData savaCompany(CompanyData companyData) {
 		Long companyId = companyData.getCompanyId();
+	//##########
 		Company company = findOrCreateCompany(companyId, companyData.getCompanyEmail());
 		
 		setFieldsInCompany(company, companyData);
@@ -54,15 +55,17 @@ public class CompanyService {
 		company.setPhone(companyData.getPhone());
 		
 	}
-	
+	//########
 	private Company findOrCreateCompany(Long companyId, String companyEmail) {
 		Company company;
 		
 		if(Objects.isNull(companyId)) {
+	//########
 			Optional<Company> opCompany = companyDao.findByCompanyEmail(companyEmail);
 		
 			if(opCompany.isPresent()) {
-				throw new DuplicateKeyException("Contributor with email " + companyEmail + "already exist.");
+	//#######
+				throw new DuplicateKeyException("Company with email " + companyEmail + "already exist.");
 
 			}
 			
@@ -96,15 +99,17 @@ public class CompanyService {
 		return new CompanyData(company);
 	}
 
+	// deleting company
 	/*
 	 * @Transactional(readOnly = false) private Company findCompanyById(Long
 	 * companyId) { Company company = findCompanyById(companyId);
 	 * companyDao.delete(company);
+	  * }
 	 * 
-	 * }
+	 * OR
 	 */
 
-	// deleting company
+	
 
 	@Transactional(readOnly = false)
 	public void deleteCompanyById(Long companyId) {
@@ -114,12 +119,14 @@ public class CompanyService {
 	//--------------------------------------------------------------------------------
 	
 	@Transactional(readOnly = false)
-	public EmployeeData saveEmployee(Long companyId, EmployeeData employeeData) {
+	public EmployeeData saveEmployee(Long companyId, 
+			EmployeeData employeeData) {
 		Company company = findCompanyById(companyId);
 		
-		Set<Department> departments = departmentDao.findAllByDepartmentIn(employeeData.getDepartments());
+		Set<Department> departments = 
+				departmentDao.findAllByDepartmentIn(employeeData.getDepartments());
 		
-		Employee employee = findOrCreateEmployee(employeeData.getEmployeeId());
+		Employee employee = findOrCreateEmployee(employeeData.getEmployeeId(), employeeData.getEmail());
 		
 		setEmployeeFields(employee, employeeData);
 		
@@ -131,6 +138,7 @@ public class CompanyService {
 		for(Department departement : departments) {
 			departement.getEmployees().add(employee);
 			employee.getDepartments().add(departement);
+			 
 		}
 		
 		Employee dbEmployee = employeeDao.save(employee);
@@ -141,6 +149,7 @@ public class CompanyService {
 		//don't set Id because it is being handled by java.
 		
 		employee.setEmployeeName(employeeData.getEmployeeName());
+		employee.setEmail(employeeData.getEmail());
 		employee.setAge(employeeData.getAge());
 		employee.setGender(employeeData.getGender());
 		employee.setPosition(employeeData.getPosition());
@@ -150,10 +159,19 @@ public class CompanyService {
 		
 	}
 
-	private Employee findOrCreateEmployee(Long employeeId) {
+	private Employee findOrCreateEmployee(Long employeeId, String Email) {
 		Employee employee;
 		
 		if(Objects.isNull(employeeId)) {
+			
+	//########
+			Optional<Company> opEmployee = companyDao.findByCompanyEmail(Email);
+		
+			if(opEmployee.isPresent()) {
+	//#######
+				throw new DuplicateKeyException("Employee with email " + Email + "already exist.");
+
+			}
 			employee = new Employee();
 		}
 		else {

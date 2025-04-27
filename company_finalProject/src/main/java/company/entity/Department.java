@@ -20,7 +20,7 @@ public class Department {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long departmentId;
 	
-	private String department
+	private String department;
 	;
 	
 	@EqualsAndHashCode.Exclude //this avoids recursion.

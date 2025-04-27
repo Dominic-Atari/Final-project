@@ -6,4 +6,6 @@ import company.entity.Employee;
 
 public interface EmployeeDao extends JpaRepository<Employee, Long> {
 
+
+
 }

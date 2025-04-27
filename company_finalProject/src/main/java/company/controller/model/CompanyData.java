@@ -52,7 +52,7 @@ public class CompanyData {
 			private String qualification;
 			private String address;
 			private String email;
-			private Set<DepartmentData> departments = new HashSet<>();
+			private Set<String> departments = new HashSet<>();
 			
 			//constructor that takes Company objects
 			public EmployeeData(Employee employee) {
@@ -66,32 +66,9 @@ public class CompanyData {
 				email = employee.getEmail();
 				
 				for(Department department : employee.getDepartments()) {
-					departments.add(new DepartmentData(department));
-				}
-			}
-			
-		
-		//inner class
-		@Data
-		@NoArgsConstructor
-		public static class DepartmentData{
-			private Long departmentId;
-			private String departmentName;
-			private Set<EmployeeData> employees = new HashSet<>();
-			
-			//constructor
-			
-			public DepartmentData(Department department) {
-				departmentId = department.getDepartmentId();
-				departmentName = department.getDepartment();
-				
-				for(Employee employee : department.getEmployees()) {
-					employees.add(new EmployeeData(employee));
-				}
-				
+					departments.add(department.getDepartment());
 			}
 		}
-
 	}
 }
 	
