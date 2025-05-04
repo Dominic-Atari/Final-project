@@ -163,18 +163,18 @@ public class CompanyService {
 		
 	}
 
-	private Employee findOrCreateEmployee(Long employeeId, String Email) {
+	private Employee findOrCreateEmployee(Long employeeId, String email) {
 		Employee employee;
 		
 		if(Objects.isNull(employeeId)) {
 			
 	//########
-			Optional<Company> opEmployee = companyDao.findByCompanyEmail(Email);
+			Optional<Employee> opEmployee = employeeDao.findByEmail(email);
 		
 			
 			if(opEmployee.isPresent()) {
 	//#######
-				throw new DataIntegrityViolationException("Employee with email " + Email + "already exist.");
+				throw new DataIntegrityViolationException("Employee with email " + email + "already exist.");
 
 			}
 			employee = new Employee();
